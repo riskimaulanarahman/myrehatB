@@ -64,85 +64,90 @@ export default function CreateListingForm() {
   });
 
   return (
-    <div className="mx-auto mt-10 w-full max-w-md p-6">
-      <h1 className="mb-6 text-center text-3xl font-bold">Create Listing</h1>
+    <div className="mx-auto w-full max-w-lg px-4 py-6 sm:py-10">
+      <div className="rounded-2xl border bg-card p-6 text-card-foreground shadow-sm sm:p-8">
+        <h1 className="text-2xl font-bold tracking-tight">Create Listing</h1>
+        <p className="mt-1 mb-6 text-sm text-muted-foreground">
+          Buyers will contact you directly on WhatsApp.
+        </p>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-        className="space-y-4"
-      >
-        {textFields.map(({ name, label, placeholder, ...inputProps }) => (
-          <form.Field key={name} name={name}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+          }}
+          className="space-y-4"
+        >
+          {textFields.map(({ name, label, placeholder, ...inputProps }) => (
+            <form.Field key={name} name={name}>
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor={field.name}>{label}</Label>
+                  <Input
+                    id={field.name}
+                    name={field.name}
+                    placeholder={placeholder}
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    {...inputProps}
+                  />
+                  {field.state.meta.errors.map((error) => (
+                    <p key={error?.message} className="text-sm text-destructive">
+                      {error?.message}
+                    </p>
+                  ))}
+                </div>
+              )}
+            </form.Field>
+          ))}
+
+          <form.Field name="category">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor={field.name}>{label}</Label>
-                <Input
+                <Label htmlFor={field.name}>Category</Label>
+                <select
                   id={field.name}
                   name={field.name}
-                  placeholder={placeholder}
                   value={field.state.value}
                   onBlur={field.handleBlur}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  {...inputProps}
-                />
+                  className="h-8 w-full rounded-md border border-input bg-transparent px-2.5 text-xs outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50 dark:bg-input/30"
+                >
+                  <option value="" disabled>
+                    Select a category
+                  </option>
+                  {BUY_HOMESTAY_CATEGORIES.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
                 {field.state.meta.errors.map((error) => (
-                  <p key={error?.message} className="text-red-500">
+                  <p key={error?.message} className="text-sm text-destructive">
                     {error?.message}
                   </p>
                 ))}
               </div>
             )}
           </form.Field>
-        ))}
 
-        <form.Field name="category">
-          {(field) => (
-            <div className="space-y-2">
-              <Label htmlFor={field.name}>Category</Label>
-              <select
-                id={field.name}
-                name={field.name}
-                value={field.state.value}
-                onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                className="h-8 w-full rounded-none border border-input bg-transparent px-2.5 text-xs outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring/50 dark:bg-input/30"
+          <form.Subscribe
+            selector={(state) => ({ canSubmit: state.canSubmit, isSubmitting: state.isSubmitting })}
+          >
+            {({ canSubmit, isSubmitting }) => (
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={!canSubmit || isSubmitting || createListing.isPending}
               >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {BUY_HOMESTAY_CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-              {field.state.meta.errors.map((error) => (
-                <p key={error?.message} className="text-red-500">
-                  {error?.message}
-                </p>
-              ))}
-            </div>
-          )}
-        </form.Field>
-
-        <form.Subscribe
-          selector={(state) => ({ canSubmit: state.canSubmit, isSubmitting: state.isSubmitting })}
-        >
-          {({ canSubmit, isSubmitting }) => (
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={!canSubmit || isSubmitting || createListing.isPending}
-            >
-              {isSubmitting || createListing.isPending ? "Submitting..." : "Create Listing"}
-            </Button>
-          )}
-        </form.Subscribe>
-      </form>
+                {isSubmitting || createListing.isPending ? "Submitting..." : "Create Listing"}
+              </Button>
+            )}
+          </form.Subscribe>
+        </form>
+      </div>
     </div>
   );
 }

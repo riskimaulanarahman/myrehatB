@@ -9,8 +9,11 @@ export default function Dashboard({ session }: { session: typeof authClient.$Inf
   const privateData = useQuery(orpc.privateData.queryOptions());
 
   return (
-    <>
-      <p>API: {privateData.data?.message}</p>
-    </>
+    <section className="mt-6 rounded-xl border bg-card px-5 py-4">
+      <h2 className="text-sm font-medium">Private API</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        {privateData.isLoading ? "Loading..." : (privateData.data?.message ?? "Unavailable")}
+      </p>
+    </section>
   );
 }

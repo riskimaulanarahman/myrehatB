@@ -103,8 +103,8 @@ export default function AIPage() {
                 <EmptyMedia variant="icon">
                   <MessageCircleDashedIcon />
                 </EmptyMedia>
-                <EmptyTitle>Morning, myrehat-task-b!</EmptyTitle>
-                <EmptyDescription>What are we working on today?</EmptyDescription>
+                <EmptyTitle>Hi, I am the MyRehat assistant</EmptyTitle>
+                <EmptyDescription>Ask me anything about buying a homestay.</EmptyDescription>
               </EmptyHeader>
             </Empty>
           ) : (
