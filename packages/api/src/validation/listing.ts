@@ -1,6 +1,9 @@
 import { BUY_HOMESTAY_CATEGORIES } from "@myrehat-task-b/db/listing-categories";
 import { z } from "zod";
 
+// Re-exported so the web app (which depends on the api package, not db) shares the same source of truth.
+export { BUY_HOMESTAY_CATEGORIES, type BuyHomestayCategory } from "@myrehat-task-b/db/listing-categories";
+
 // Positive decimal with up to 12 integer digits and at most 2 decimal places,
 // e.g. "100000" or "250000.50". Kept as a string so it is stored without float rounding.
 const PRICE_PATTERN = /^(0|[1-9]\d{0,11})(\.\d{1,2})?$/;
