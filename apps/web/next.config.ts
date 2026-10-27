@@ -1,24 +1,34 @@
 import { varlockNextConfigPlugin } from "@varlock/nextjs-integration/plugin";
+import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const withVarlock = varlockNextConfigPlugin();
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  typedRoutes: true,
-  reactCompiler: true,
-  output: "standalone",
-  transpilePackages: ["shiki"],
-  async rewrites() {
-    return [
-      { source: "/rpc", destination: "http://server:3000/rpc" },
-      { source: "/rpc/:path*", destination: "http://server:3000/rpc/:path*" },
-      { source: "/api/auth", destination: "http://server:3000/api/auth" },
-      {
-        source: "/api/auth/:path*",
-        destination: "http://server:3000/api/auth/:path*",
-      },
-    ];
-  },
+// Docker/Dokploy: the API server is reachable as http://server:3000 on the compose network.
+// `next dev` runs outside Docker, where the API server listens on localhost:3000.
+const PRODUCTION_API_SERVER = "http://server:3000";
+const DEV_API_SERVER = "http://localhost:3000";
+
+const nextConfig = (phase: string): NextConfig => {
+  const apiServer = phase === PHASE_DEVELOPMENT_SERVER ? DEV_API_SERVER : PRODUCTION_API_SERVER;
+
+  return {
+    typedRoutes: true,
+    reactCompiler: true,
+    output: "standalone",
+    transpilePackages: ["shiki"],
+    async rewrites() {
+      return [
+        { source: "/rpc", destination: `${apiServer}/rpc` },
+        { source: "/rpc/:path*", destination: `${apiServer}/rpc/:path*` },
+        { source: "/api/auth", destination: `${apiServer}/api/auth` },
+        {
+          source: "/api/auth/:path*",
+          destination: `${apiServer}/api/auth/:path*`,
+        },
+      ];
+    },
+  };
 };
 
 export default withVarlock(nextConfig);
