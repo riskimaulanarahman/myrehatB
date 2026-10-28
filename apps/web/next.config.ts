@@ -4,9 +4,10 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 const withVarlock = varlockNextConfigPlugin();
 import type { NextConfig } from "next";
 
-// Docker/Dokploy: the API server is reachable as http://server:3000 on the compose network.
+// Docker/Dokploy: the API server is the `taskb14-api` compose service. The name must be unique
+// because Dokploy puts every project on the shared dokploy-network.
 // `next dev` runs outside Docker, where the API server listens on localhost:3000.
-const PRODUCTION_API_SERVER = "http://server:3000";
+const PRODUCTION_API_SERVER = "http://taskb14-api:3000";
 const DEV_API_SERVER = "http://localhost:3000";
 
 const nextConfig = (phase: string): NextConfig => {
