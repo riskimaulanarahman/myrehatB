@@ -15,6 +15,10 @@ summarises the prompt and what the assistant did. No credentials are recorded he
 | 6 | Implement F2: `POST /api/webhooks/waha` with AI SDK `generateText` + OpenRouter, returning `{ to, reply }`. | Next.js route handler on the web origin (compose gives `OPENROUTER_*` to the web service). Validation, prompt and provider call are in separate modules so the AI call can be mocked. 400/422/503/502 error handling. |
 | 6b | Security pass for F2 and keyless verification. | Found the real key baked into ignored local build output/caches by varlock; artifacts purged, keyless typecheck/build/503 verified. |
 | 7 | Finish the task end to end: F3, F4, Vitest, same-origin production setup, deploy. | Browser API calls now always use the web origin (rewrites), F3 `scripts/polish.ts` with ai-sdk-provider-opencode-sdk, F4 hero, Vitest suite (`bunx vitest run`). |
+| 8 | Run an end-to-end UAT with Playwright. | `e2e/uat.spec.ts` covers the hero, auth, listing creation for all four categories and the webhook responses. It runs locally or against a deployed URL via `UAT_BASE_URL`. |
+| 9 | Improve the look of the web app to match the MyRehat/BuyHomestay brand. | Brand colour tokens (WCAG AA in light and dark), rounded components, Plus Jakarta Sans; header, home, listings, forms, dashboard and AI chat greeting restyled. |
+| 10 | Reviewer report: `/listings` returns 500 when a listing has no WhatsApp number. | The number is read null-safely and the page shows "WhatsApp contact not available" instead of crashing. |
+| 11 | Find out why production returned another project's listings. | `server` also resolved to another project's service on the shared `dokploy-network`. The compose service was renamed to `taskb14-api`, so the patch 2 rewrites now target `http://taskb14-api:3000` instead of `http://server:3000`. |
 
 ## Runtime prompts used by the application
 
