@@ -194,6 +194,25 @@ test.describe.serial("F1 — authenticated listing flow", () => {
   });
 });
 
+test.describe("AI chat", () => {
+  test("UAT-17 replies through the same-origin endpoint", async ({ page }) => {
+    await page.goto("/ai");
+    const prompt = page.getByPlaceholder("Type your message...");
+    await prompt.fill("What can I buy on MyRehat?");
+    await page.getByRole("button", { name: "Send" }).click();
+
+    await expect(page.getByText("AI Assistant")).toBeVisible({ timeout: 45_000 });
+    // The prompt is disabled while the reply streams.
+    await expect(prompt).toBeEnabled({ timeout: 45_000 });
+    await expect(page.getByText("The assistant could not reply")).toHaveCount(0);
+  });
+
+  test("UAT-18 rejects invalid messages with 422", async ({ request }) => {
+    const response = await request.post("/api/ai/chat", { data: { messages: [] } });
+    expect(response.status()).toBe(422);
+  });
+});
+
 test.describe("F2 — WAHA webhook", () => {
   test("UAT-13 valid payload returns exactly { to, reply }", async ({ request }) => {
     const response = await request.post("/api/webhooks/waha", { data: wahaPayload });

@@ -35,13 +35,11 @@ import { ArrowUpIcon, Loader2, MessageCircleDashedIcon, RotateCwIcon } from "luc
 import { useState, type FormEvent, type KeyboardEvent } from "react";
 import { Streamdown } from "streamdown";
 
-import { ENV } from "../../env";
-
 export default function AIPage() {
   const [input, setInput] = useState("");
-  const { messages, sendMessage, status, setMessages } = useChat({
+  const { messages, sendMessage, status, setMessages, error } = useChat({
     transport: new DefaultChatTransport({
-      api: `${ENV.NEXT_PUBLIC_SERVER_URL}/ai`,
+      api: "/api/ai/chat",
     }),
   });
   const isSending = status === "submitted" || status === "streaming";
@@ -172,6 +170,11 @@ export default function AIPage() {
         </main>
         <footer className="shrink-0 border-t px-4 py-3">
           <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
+            {error && (
+              <p role="alert" className="text-sm text-destructive">
+                The assistant could not reply. Please try again.
+              </p>
+            )}
             <form onSubmit={handleSubmit} className="w-full">
               <InputGroup>
                 <InputGroupTextarea

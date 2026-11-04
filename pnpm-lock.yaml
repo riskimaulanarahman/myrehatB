@@ -111,12 +111,6 @@ importers:
 
   apps/server:
     dependencies:
-      '@ai-sdk/devtools':
-        specifier: ^1.0.15
-        version: 1.0.57(zod@4.6.7)
-      '@ai-sdk/google':
-        specifier: ^4.0.64
-        version: 4.0.106(zod@4.6.7)
       '@elysiajs/cors':
         specifier: ^1.4.2
         version: 1.4.2(elysia@1.4.30(@sinclair/typebox@0.34.52)(@types/bun@1.4.4)(exact-mirror@1.2.6)(file-type@22.2.0)(openapi-types@12.1.3)(typescript@6.0.3))
@@ -141,9 +135,6 @@ importers:
       '@sinclair/typebox':
         specifier: ^0.34.52
         version: 0.34.52
-      ai:
-        specifier: 'catalog:'
-        version: 7.0.154(zod@4.6.7)
       better-auth:
         specifier: 'catalog:'
         version: 1.7.12(drizzle-kit@1.0.0-rc.5(drizzle-orm@1.0.0-rc.5(@sinclair/typebox@0.34.52)(@types/pg@8.23.1)(bun-types@1.4.4)(effect@4.0.0-rc.112)(pg@8.23.1)(zod@4.6.7)))(drizzle-orm@1.0.0-rc.5(@sinclair/typebox@0.34.52)(@types/pg@8.23.1)(bun-types@1.4.4)(effect@4.0.0-rc.112)(pg@8.23.1)(zod@4.6.7))(next@16.4.3(@playwright/test@1.64.1)(@types/node@26.6.5)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(varlock@1.23.0))(pg@8.23.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(solid-js@1.9.17)(vitest@5.0.5(@types/node@26.6.5)(vite@8.3.5(@types/node@26.6.5)(jiti@2.7.0)))
@@ -413,19 +404,8 @@ importers:
 
 packages:
 
-  '@ai-sdk/devtools@1.0.57':
-    resolution: {integrity: sha512-7wY1nxH+yCQYrRyi8v6c2jX5SqW7iJdq6wvJyIKPfSlVqFRKeGJv0ilaB0XgX2+TYDCpL//DKVviKqs+ItqBhg==}
-    engines: {node: '>=22'}
-    hasBin: true
-
   '@ai-sdk/gateway@4.0.127':
     resolution: {integrity: sha512-ENcIQNrZxgFnNSx29X2o/mLKZRzMN91c53Qlp/UrF4RQGVSfaROjFQAq4eeJliRPWwjHvEhJYG42IrOwtWUGOQ==}
-    engines: {node: '>=22'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4.1.8
-
-  '@ai-sdk/google@4.0.106':
-    resolution: {integrity: sha512-8wKBFmG6ykBYrqFO7gZIg3xqeJvDMAxrSKgg21f7442z3wnAjJJ/mP3EWo5/WuG0iwezuHM8GmixwMRwkD0fdg==}
     engines: {node: '>=22'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -797,12 +777,6 @@ packages:
 
   '@floating-ui/utils@0.2.12':
     resolution: {integrity: sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww==}
-
-  '@hono/node-server@1.19.17':
-    resolution: {integrity: sha512-dSneS5qhiauZWGDCeK4o695Xd9nUNjviSZCMQrj10eetr8Uln1ucn6bbphOM6UynAMMtNIzZNSpL9vnASJwrPQ==}
-    engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: ^4
 
   '@hono/node-server@2.1.5':
     resolution: {integrity: sha512-MgP/I06GdvsilDspMk/qmRzpk8LOUStP6jFAbSRi40W09DhoyUn+Mj7eyKICPqeYKybOjVFLVIAQzvu1bfIa7Q==}
@@ -4167,26 +4141,11 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/devtools@1.0.57(zod@4.6.7)':
-    dependencies:
-      '@ai-sdk/provider': 4.0.34
-      '@hono/node-server': 1.19.17(hono@4.13.14)
-      ai: 7.0.154(zod@4.6.7)
-      hono: 4.13.14
-    transitivePeerDependencies:
-      - zod
-
   '@ai-sdk/gateway@4.0.127(zod@4.6.7)':
     dependencies:
       '@ai-sdk/provider': 4.0.34
       '@ai-sdk/provider-utils': 5.0.69(zod@4.6.7)
       '@vercel/oidc': 3.2.0
-      zod: 4.6.7
-
-  '@ai-sdk/google@4.0.106(zod@4.6.7)':
-    dependencies:
-      '@ai-sdk/provider': 4.0.34
-      '@ai-sdk/provider-utils': 5.0.69(zod@4.6.7)
       zod: 4.6.7
 
   '@ai-sdk/mcp@2.0.85(zod@4.6.7)':
@@ -4583,10 +4542,6 @@ snapshots:
       react-dom: 19.3.1(react@19.3.1)
 
   '@floating-ui/utils@0.2.12': {}
-
-  '@hono/node-server@1.19.17(hono@4.13.14)':
-    dependencies:
-      hono: 4.13.14
 
   '@hono/node-server@2.1.5(hono@4.13.14)':
     dependencies:
