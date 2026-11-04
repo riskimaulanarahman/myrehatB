@@ -43,6 +43,13 @@ export default function AIPage() {
     }),
   });
   const isSending = status === "submitted" || status === "streaming";
+  // While a listing search runs, the assistant message has no text to show yet.
+  const lastMessage = messages.at(-1);
+  const isWaitingForText =
+    status === "submitted" ||
+    (status === "streaming" &&
+      lastMessage?.role === "assistant" &&
+      !lastMessage.parts.some((part) => part.type === "text"));
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -114,6 +121,9 @@ export default function AIPage() {
                 >
                   {messages.map((message) => {
                     const isUser = message.role === "user";
+                    if (!isUser && !message.parts.some((part) => part.type === "text")) {
+                      return null;
+                    }
 
                     return (
                       <MessageScrollerItem key={message.id} scrollAnchor={isUser}>
@@ -147,7 +157,7 @@ export default function AIPage() {
                       </MessageScrollerItem>
                     );
                   })}
-                  {status === "submitted" && (
+                  {isWaitingForText && (
                     <MessageScrollerItem>
                       <Message align="start">
                         <MessageBody>

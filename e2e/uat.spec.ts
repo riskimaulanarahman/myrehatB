@@ -207,6 +207,18 @@ test.describe("AI chat", () => {
     await expect(page.getByText("The assistant could not reply")).toHaveCount(0);
   });
 
+  test("UAT-19 answers from the real listings", async ({ page }) => {
+    await page.goto("/ai");
+    const prompt = page.getByPlaceholder("Type your message...");
+    // The stamp only exists in the listing created by UAT-09, so a model cannot guess it.
+    await prompt.fill(`Find the listing with ${stamp} in its title and tell me its full title.`);
+    await page.getByRole("button", { name: "Send" }).click();
+
+    await expect(page.getByText("AI Assistant")).toBeVisible({ timeout: 45_000 });
+    await expect(prompt).toBeEnabled({ timeout: 45_000 });
+    await expect(page.locator("main")).toContainText(`UAT Homestay ${stamp}`);
+  });
+
   test("UAT-18 rejects invalid messages with 422", async ({ request }) => {
     const response = await request.post("/api/ai/chat", { data: { messages: [] } });
     expect(response.status()).toBe(422);

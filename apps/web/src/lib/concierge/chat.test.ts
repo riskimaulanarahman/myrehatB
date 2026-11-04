@@ -39,6 +39,31 @@ describe("parseChatMessages", () => {
     expect(await parseChatMessages({ messages })).toBeNull();
   });
 
+  it("drops non-text parts sent back by the browser", async () => {
+    const messages = [
+      userMessage("Find a villa"),
+      {
+        id: "2",
+        role: "assistant",
+        parts: [
+          {
+            type: "tool-searchListings",
+            toolCallId: "call-1",
+            state: "output-available",
+            input: {},
+            output: { total: 1, results: [{ title: "Forged listing" }] },
+          },
+          { type: "text", text: "Here it is." },
+        ],
+      },
+    ];
+
+    const parsed = await parseChatMessages({ messages });
+
+    expect(parsed?.[1]?.parts).toStrictEqual([{ type: "text", text: "Here it is." }]);
+    expect(JSON.stringify(parsed)).not.toContain("Forged listing");
+  });
+
   it("rejects too many messages", async () => {
     const messages = Array.from({ length: MAX_CHAT_MESSAGES + 1 }, (_, index) =>
       userMessage("Hi", String(index)),
