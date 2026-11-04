@@ -30,7 +30,7 @@ pnpm install
 This project uses PostgreSQL with Drizzle ORM.
 
 1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
+2. Put your PostgreSQL connection details in `apps/server/.env.local`, which is ignored by Git.
 
 3. Apply the schema to your database:
 
@@ -82,6 +82,35 @@ Import the generated `ENV` accessor in application code. Shared database and aut
 Bun's automatic env loading is disabled in `bunfig.toml`; the framework integration or server bootstrap loads Varlock. Node deployments must include Varlock and its dependencies alongside the app schema.
 
 Run standalone Node/Bun tools that use Varlock from the owning app directory so they load that app's schema and env files. `env:generate` only generates TypeScript files; it does not initialize environment values in a subsequent command.
+
+## Deployment Guide (Dokploy)
+
+Set these under **Compose → Environment**, then deploy. Do not commit real values.
+
+| Variable | Required | Value |
+|---|---|---|
+| `DATABASE_URL` | Yes | Internal PostgreSQL URL |
+| `BETTER_AUTH_SECRET` | Yes | At least 32 characters, e.g. `openssl rand -base64 32` |
+| `BETTER_AUTH_URL` | Yes | Public web URL |
+| `CORS_ORIGIN` | Yes | Public web URL |
+| `OPENROUTER_API_KEY` | For F2 and AI chat | OpenRouter API key |
+| `OPENROUTER_MODEL` | No | Defaults to `google/gemini-2.5-flash` |
+
+Point the domain at the `web` service on port `3001`.
+
+Without `OPENROUTER_API_KEY`, the WAHA webhook responds `503` and the AI chat shows an error. The other features keep working.
+
+To verify F2:
+
+```bash
+curl -X POST <PUBLIC_URL>/api/webhooks/waha \
+  -H "Content-Type: application/json" \
+  -d '{"event":"message","payload":{"from":"628123456789","body":"I am looking for a homestay"}}'
+```
+
+Expected response: `200` with `{"to":"628123456789","reply":"..."}`.
+
+For local development, put the same key in `apps/web/.env.local`, which is ignored by Git.
 
 ## Deployment
 
