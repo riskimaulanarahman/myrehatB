@@ -2,12 +2,16 @@ import { Button } from "@myrehat-task-b/ui/components/button";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 
 import { authClient } from "@/lib/auth-client";
 
 import Dashboard from "./dashboard";
 
 export default async function DashboardPage() {
+  // Per-user data; never prerender.
+  await connection();
+
   const session = await authClient.getSession({
     fetchOptions: {
       headers: await headers(),
@@ -38,7 +42,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
       </div>
-      <Dashboard session={session} />
+      <Dashboard />
     </div>
   );
 }

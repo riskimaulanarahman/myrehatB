@@ -57,3 +57,15 @@ expression throws `TypeError` while the guard returns `null`.
 |---|---|
 | `vitest-green.png` | `bunx vitest run --reporter=verbose`: 9 files, 90 tests passed |
 | `vitest.log` | The same run as plain text |
+
+## 3. `/dashboard` shows the user's own listings
+
+`listing.mine` (protected) in `packages/api/src/routers/listing.ts` filters by the session's user id;
+`/dashboard` renders the result with the same card as `/listings`. Calling it signed out returns 401.
+
+| File | Shows |
+|---|---|
+| `3-dashboard-empty.png` | A new account before creating anything: empty state |
+| `4-dashboard-my-listings.png` | The same account after creating one listing: only its own listing, not other accounts' |
+
+Covered end to end by `UAT-20` in `e2e/uat.spec.ts`.

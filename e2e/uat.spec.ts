@@ -173,6 +173,18 @@ test.describe.serial("F1 — authenticated listing flow", () => {
     }
   });
 
+  test("UAT-20 dashboard lists only the user's own listings", async () => {
+    await page.goto("/dashboard");
+    const mine = page.locator("section", { has: page.getByRole("heading", { name: "My listings" }) });
+
+    // UAT-09 + UAT-10 created one listing per category for this user.
+    await expect(mine.getByRole("listitem")).toHaveCount(CATEGORIES.length);
+    for (const category of CATEGORIES) {
+      await expect(mine.getByRole("listitem").filter({ hasText: category })).toHaveCount(1);
+    }
+    await expect(mine.getByRole("listitem").filter({ hasNotText: listingTitle })).toHaveCount(0);
+  });
+
   test("UAT-11 sign out ends the session and protects the form again", async () => {
     await page.getByRole("button", { name: user.name }).click();
     await page.getByRole("menuitem", { name: "Sign Out" }).click();
