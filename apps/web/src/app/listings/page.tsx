@@ -10,18 +10,8 @@ import { House, MapPin, MessageCircle, Plus } from "lucide-react";
 import Link from "next/link";
 import { connection } from "next/server";
 
+import { formatPrice, getWhatsAppLink } from "@/lib/listing-format";
 import { client } from "@/utils/orpc";
-
-// Formats the stored decimal string (e.g. "250000.5") without converting it to a float.
-// Rows created before the current schema may lack a value, so never assume one is present.
-function formatPrice(price: string | null | undefined) {
-  if (!price) {
-    return "-";
-  }
-  const [whole = "0", fraction] = price.split(".");
-  const grouped = whole.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return `${grouped}${fraction ? `.${fraction.padEnd(2, "0")}` : ""}`;
-}
 
 export default async function ListingsPage() {
   // Listings change per request; never prerender them at build time.
@@ -65,9 +55,8 @@ export default async function ListingsPage() {
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {listings.map((item) => {
-            // Older rows may have no WhatsApp number; show a fallback instead of crashing.
-            const wa = item.whatsapp ?? "";
-            const waDigits = wa.replace(/\D/g, "");
+            // The number may be missing at runtime; show a fallback instead of crashing.
+            const waLink = getWhatsAppLink(item.whatsapp);
 
             return (
               <li
@@ -83,15 +72,15 @@ export default async function ListingsPage() {
                   {item.location}
                 </p>
                 <p className="mt-4 text-lg font-bold text-highlight">Price: {formatPrice(item.price)}</p>
-                {waDigits ? (
+                {waLink ? (
                   <a
-                    href={`https://wa.me/${waDigits}`}
+                    href={waLink.href}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-4 inline-flex items-center justify-center gap-2 rounded-md bg-success px-3 py-2 text-sm font-medium text-success-foreground transition-opacity outline-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <MessageCircle className="size-4 shrink-0" aria-hidden="true" />
-                    <span className="break-all">WhatsApp: {wa}</span>
+                    <span className="break-all">WhatsApp: {waLink.label}</span>
                   </a>
                 ) : (
                   <p className="mt-4 rounded-md border border-dashed px-3 py-2 text-center text-sm text-muted-foreground">
